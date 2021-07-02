@@ -30,4 +30,3 @@ build/
 nbbuild/
 dist/
 nbdist/ 
-/src/controller/FXMLDocumentController.java
