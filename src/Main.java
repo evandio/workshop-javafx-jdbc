@@ -14,7 +14,7 @@ import javafx.stage.Stage;
  *
  * @author evand
  */
-public class WorkshopJavafxJdbc extends Application {
+public class Main extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
