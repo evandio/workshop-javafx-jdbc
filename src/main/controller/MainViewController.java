@@ -60,6 +60,7 @@ public class MainViewController implements Initializable {
 
     //<T> Função generica parametrizada (existe aula para isso)
     //Proucurar a aula de funções Lambda
+    //Aula 279 realiza a inicialização com acoes por parametro
     private synchronized <T> void loadView(String absoluteName, Consumer<T> initializingAction) {
 
         try {
