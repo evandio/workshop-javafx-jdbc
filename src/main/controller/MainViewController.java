@@ -24,7 +24,7 @@ import javafx.scene.layout.VBox;
  *
  * @author evand
  */
-public class MainViewController implements Initializable {
+public class  MainViewController implements Initializable {
 
     //Para os IDs nas GUI
     @FXML
@@ -44,7 +44,7 @@ public class MainViewController implements Initializable {
 
     @FXML
     public void onMenuItemDepartamentAction() {
-        System.out.println("Departament");
+        loadView("/main/gui/DepartamentList.fxml");
     }
 
     @FXML
@@ -52,7 +52,7 @@ public class MainViewController implements Initializable {
         loadView("/main/gui/About.fxml");
     }
 
-    private void loadView(String absoluteName) {
+    private synchronized void loadView(String absoluteName) {
 
         try {
             //FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
@@ -74,6 +74,7 @@ public class MainViewController implements Initializable {
 
         } catch (IOException e) {
             Alerts.showAlert("IO Exceptio", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
+            e.printStackTrace();
         }
     }
 
