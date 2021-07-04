@@ -11,12 +11,13 @@ package main;
 import main.gui.util.Alerts;
 import java.io.IOException;
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
+import main.model.dao.DaoFactory;
+import main.model.dao.SellerDao;
 
 /**
  *
