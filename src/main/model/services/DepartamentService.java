@@ -5,9 +5,10 @@
  */
 package main.model.services;
 
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.util.ArrayList;
 import java.util.List;
+import main.model.dao.DaoFactory;
+import main.model.dao.DepartmentDao;
 import main.model.entities.Department;
 
 /**
@@ -16,16 +17,9 @@ import main.model.entities.Department;
  */
 public class DepartamentService {
 
+    private DepartmentDao dao = DaoFactory.createDepartmenttDao();
+
     public List<Department> findAll() {
-        //MOCK dados
-
-        List<Department> list = new ArrayList<>();
-        list.add(new Department(1, "Books"));
-        list.add(new Department(2, "Computes"));
-        list.add(new Department(3, "Eletronics"));
-        list.add(new Department(4, "Games"));
-
-        return list;
+        return  dao.findAll();
     }
-
 }

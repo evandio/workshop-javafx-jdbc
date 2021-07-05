@@ -16,8 +16,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
-import main.model.dao.DaoFactory;
-import main.model.dao.SellerDao;
 
 /**
  *

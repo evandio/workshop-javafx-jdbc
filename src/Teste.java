@@ -8,6 +8,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
+import main.db.DB;
+import main.model.dao.DaoFactory;
+import main.model.dao.DepartmentDao;
+import main.model.entities.Department;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -138,12 +142,12 @@ public class Teste {
         String sql = "select * from department";
 
         try {
-            conn = Teste.getConexao();
+            conn = DB.getConnection();
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sql);
 
             while (rs.next()) {
-                System.out.println("Name: " + rs.getString("name"));
+                System.out.println("Namex: " + rs.getString("name"));
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -23,5 +23,7 @@ public interface DepartmentDao {
     Department findById(Integer id);
 
     List<Department> findAll(Department obj);
+    
+    List<Department> findAll();
 
 }

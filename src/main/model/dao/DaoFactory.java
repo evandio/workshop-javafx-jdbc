@@ -20,7 +20,7 @@ public class DaoFactory {
     }
 
     public static DepartmentDao createDepartmenttDao() {
-        return new DepartmentJDBC();
+        return new DepartmentJDBC(DB.getConnection());
     }
 
 }
