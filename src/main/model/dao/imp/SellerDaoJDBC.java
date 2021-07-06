@@ -91,7 +91,6 @@ public class SellerDaoJDBC implements SellerDao {
                 + "*, department.name as depName "
                 + "from "
                 + " seller INNER JOIN department ON seller.departmentid = department.id "
-                + "WHERE "
                 + "ORDER BY department.name ";
 
         try {
@@ -100,9 +99,14 @@ public class SellerDaoJDBC implements SellerDao {
             rs = st.executeQuery();
 
             List<Seller> list = new ArrayList<>();
+            Map<Integer, Department> map = new HashMap<>();
 
             while (rs.next()) {
-                Department dep = instantiateDepartment(rs);
+                Department dep = map.get(rs.getInt("departmentid"));
+                if (dep == null) {
+                    dep = instantiateDepartment(rs);
+                    map.put(rs.getInt("departmentid"), dep);
+                }
                 Seller obj = instantiateSeller(rs, dep);
                 list.add(obj);
             }
@@ -176,5 +180,5 @@ public class SellerDaoJDBC implements SellerDao {
             DB.closeResultSet(rs);
         }
     }
-
+    
 }
