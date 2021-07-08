@@ -7,7 +7,19 @@ package main.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import main.db.DbException;
+import main.gui.util.Alerts;
+import main.gui.util.Constraints;
+import main.gui.util.Utils;
+import main.model.entities.Department;
+import main.model.services.DepartmentService;
 
 /**
  * FXML Controller class
@@ -16,12 +28,79 @@ import javafx.fxml.Initializable;
  */
 public class DeparttmentFormController implements Initializable {
 
+    private Department entity;
+    private DepartmentService service;
+
+    @FXML
+    private TextField txtId;
+
+    @FXML
+    private TextField txtName;
+
+    @FXML
+    private Label labelErroName;
+    @FXML
+    private Button btSave;
+
+    private Button btCancel;
+
+    public void onBtSaveAction(ActionEvent event) {
+
+        if (entity == null) {
+            throw new DbException("Entity was null!");
+        }
+
+        if (service == null) {
+            throw new DbException("Service was null");
+        }
+        try {
+            entity = getFormData();
+            service.saveOrUpdatet(entity);
+            Utils.currentStage(event).close();
+        } catch (DbException e) {
+            Alerts.showAlert("Error saving object", null, e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+
+    public void onBtCancelAction(ActionEvent event) {
+        Utils.currentStage(event).close();
+    }
+
+    public void setDepartment(Department entity) {
+        this.entity = entity;
+    }
+
+    public void setDepartmentService(DepartmentService service) {
+        this.service = service;
+    }
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
-    
+        initializeNodes();
+    }
+
+    private void initializeNodes() {
+        Constraints.setTextFieldDouble(txtId);
+        Constraints.setTextFieldMaxLenght(txtName, 40);
+    }
+
+    public void updateFormData() {
+        if (entity == null) {
+            throw new IllegalStateException("Entity was null");
+        }
+        //txtId.setText(String.valueOf(entity.getId()));
+        txtId.setText(String.valueOf(entity.getId()).toString());
+        txtName.setText(entity.getName());
+    }
+
+    private Department getFormData() {
+        Department obj = new Department();
+        obj.setId(Utils.tryParseToInt(txtId.getText()));
+        obj.setName(txtName.getText());
+
+        return obj;
+    }
 }

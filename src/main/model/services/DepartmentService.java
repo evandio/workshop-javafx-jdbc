@@ -5,7 +5,6 @@
  */
 package main.model.services;
 
-import java.util.ArrayList;
 import java.util.List;
 import main.model.dao.DaoFactory;
 import main.model.dao.DepartmentDao;
@@ -15,11 +14,19 @@ import main.model.entities.Department;
  *
  * @author evand
  */
-public class DepartamentService {
+public class DepartmentService {
 
     private DepartmentDao dao = DaoFactory.createDepartmenttDao();
 
     public List<Department> findAll() {
         return  dao.findAll();
     }
+    
+     public void saveOrUpdatet(Department obj){
+         if (obj.getId() == null){
+             dao.insert(obj);
+         } else {
+             dao.updatet(obj);
+         }
+     }
 }

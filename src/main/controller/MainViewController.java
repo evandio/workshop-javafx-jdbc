@@ -20,7 +20,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
-import main.model.services.DepartamentService;
+import main.model.services.DepartmentService;
 
 /**
  *
@@ -47,7 +47,7 @@ public class MainViewController implements Initializable {
     @FXML
     public void onMenuItemDepartamentAction() {
         loadView("/main/gui/DepartamentList.fxml", (DepartamentListController controller) -> {
-            controller.setDepartamentService(new DepartamentService());
+            controller.setDepartamentService(new DepartmentService());
             controller.updateTableView();
         });
     }
