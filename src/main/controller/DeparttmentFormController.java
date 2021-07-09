@@ -6,6 +6,8 @@
 package main.controller;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,6 +22,7 @@ import main.gui.util.Constraints;
 import main.gui.util.Utils;
 import main.model.entities.Department;
 import main.model.services.DepartmentService;
+import main.gui.listener.DataChangeListener;
 
 /**
  * FXML Controller class
@@ -30,6 +33,7 @@ public class DeparttmentFormController implements Initializable {
 
     private Department entity;
     private DepartmentService service;
+    private List<DataChangeListener> dataChangeListener = new ArrayList<>();
 
     @FXML
     private TextField txtId;
@@ -53,9 +57,11 @@ public class DeparttmentFormController implements Initializable {
         if (service == null) {
             throw new DbException("Service was null");
         }
+
         try {
             entity = getFormData();
             service.saveOrUpdatet(entity);
+            notifyDataChangeListeners();
             Utils.currentStage(event).close();
         } catch (DbException e) {
             Alerts.showAlert("Error saving object", null, e.getMessage(), Alert.AlertType.ERROR);
@@ -72,6 +78,10 @@ public class DeparttmentFormController implements Initializable {
 
     public void setDepartmentService(DepartmentService service) {
         this.service = service;
+    }
+
+    public void subscribeDataChangeListener(DataChangeListener listener) {
+        dataChangeListener.add(listener);
     }
 
     /**
@@ -102,5 +112,11 @@ public class DeparttmentFormController implements Initializable {
         obj.setName(txtName.getText());
 
         return obj;
+    }
+
+    private void notifyDataChangeListeners() {
+        for (DataChangeListener listener : dataChangeListener){
+             listener.onDataChanged();
+        }
     }
 }
