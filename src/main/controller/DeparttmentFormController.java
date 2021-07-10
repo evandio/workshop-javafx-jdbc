@@ -8,7 +8,9 @@ package main.controller;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -23,6 +25,7 @@ import main.gui.util.Utils;
 import main.model.entities.Department;
 import main.model.services.DepartmentService;
 import main.gui.listener.DataChangeListener;
+import main.model.exception.ValidationException;
 
 /**
  * FXML Controller class
@@ -30,56 +33,58 @@ import main.gui.listener.DataChangeListener;
  * @author evand
  */
 public class DeparttmentFormController implements Initializable {
-
+    
     private Department entity;
     private DepartmentService service;
     private List<DataChangeListener> dataChangeListener = new ArrayList<>();
-
+    
     @FXML
     private TextField txtId;
-
+    
     @FXML
     private TextField txtName;
-
+    
     @FXML
     private Label labelErroName;
     @FXML
     private Button btSave;
-
+    
     private Button btCancel;
-
+    
     public void onBtSaveAction(ActionEvent event) {
-
+        
         if (entity == null) {
             throw new DbException("Entity was null!");
         }
-
+        
         if (service == null) {
             throw new DbException("Service was null");
         }
-
+        
         try {
             entity = getFormData();
             service.saveOrUpdatet(entity);
             notifyDataChangeListeners();
             Utils.currentStage(event).close();
+        } catch (ValidationException e) {
+            setErrorMensages(e.getErros());
         } catch (DbException e) {
             Alerts.showAlert("Error saving object", null, e.getMessage(), Alert.AlertType.ERROR);
         }
     }
-
+    
     public void onBtCancelAction(ActionEvent event) {
         Utils.currentStage(event).close();
     }
-
+    
     public void setDepartment(Department entity) {
         this.entity = entity;
     }
-
+    
     public void setDepartmentService(DepartmentService service) {
         this.service = service;
     }
-
+    
     public void subscribeDataChangeListener(DataChangeListener listener) {
         dataChangeListener.add(listener);
     }
@@ -91,12 +96,12 @@ public class DeparttmentFormController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         initializeNodes();
     }
-
+    
     private void initializeNodes() {
         Constraints.setTextFieldDouble(txtId);
         Constraints.setTextFieldMaxLenght(txtName, 40);
     }
-
+    
     public void updateFormData() {
         if (entity == null) {
             throw new IllegalStateException("Entity was null");
@@ -105,18 +110,36 @@ public class DeparttmentFormController implements Initializable {
         txtId.setText(String.valueOf(entity.getId()).toString());
         txtName.setText(entity.getName());
     }
-
+    
     private Department getFormData() {
         Department obj = new Department();
+        
+        ValidationException exception = new ValidationException("Validation error!");
+        
         obj.setId(Utils.tryParseToInt(txtId.getText()));
+        
+        if (txtName.getText() == null || txtName.getText().equals("")) {
+            exception.addErros("name", "Field can't be empty!");
+        }
         obj.setName(txtName.getText());
-
+        
+        if (exception.getErros().size() > 0) {
+            throw exception;
+        }
+        
         return obj;
     }
-
+    
     private void notifyDataChangeListeners() {
-        for (DataChangeListener listener : dataChangeListener){
-             listener.onDataChanged();
+        for (DataChangeListener listener : dataChangeListener) {
+            listener.onDataChanged();
+        }
+    }
+    
+    private void setErrorMensages(Map<String, String> erros) {
+        Set<String> fields = erros.keySet();
+        if (fields.contains("name")) {
+            labelErroName.setText(erros.get("name"));
         }
     }
 }
