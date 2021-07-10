@@ -15,18 +15,23 @@ import main.model.entities.Department;
  * @author evand
  */
 public class DepartmentService {
-
+    
     private DepartmentDao dao = DaoFactory.createDepartmenttDao();
-
+    
     public List<Department> findAll() {
-        return  dao.findAll();
+        return dao.findAll();
     }
     
-     public void saveOrUpdatet(Department obj){
-         if (obj.getId() == null){
-             dao.insert(obj);
-         } else {
-             dao.updatet(obj);
-         }
-     }
+    public void saveOrUpdatet(Department obj) {
+        if (obj.getId() == null) {
+            dao.insert(obj);
+        } else {
+            dao.updatet(obj);
+        }
+    }
+    
+    public void remove(Department obj) {
+        dao.deleteById(obj.getId());
+    }
+    
 }

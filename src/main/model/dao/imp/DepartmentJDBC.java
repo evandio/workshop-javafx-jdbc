@@ -5,7 +5,6 @@
  */
 package main.model.dao.imp;
 
-import com.sun.org.apache.bcel.internal.generic.DDIV;
 import main.db.DbException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -94,7 +93,7 @@ public class DepartmentJDBC implements DepartmentDao {
             st.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DbException(e.getMessage());
+            throw new DbIntegrityException(e.getMessage());
         } finally{
             DB.closeStatement(st);
         }
