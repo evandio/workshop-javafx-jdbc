@@ -42,14 +42,11 @@ public class MainViewController implements Initializable {
     //Para os eventos heandler
     @FXML
     public void onMenuItemSellerAction() {
-         loadView("/main/gui/DepartamentList.fxml", (DepartamentListController controller) -> {
-            controller.setDepartamentService(new DepartmentService());
+      
+        loadView("/main/gui/SellerList.fxml", (SellerListController controller) -> {
+            controller.setSellerService(new SellerService());
             controller.updateTableView();
         });
-       // loadView("/main/gui/SellerList.fxml", (SellerListController controller) -> {
-       //     controller.setSellerService(new SellerService());
-       //     controller.updateTableView();
-       // });
     }
 
     @FXML
