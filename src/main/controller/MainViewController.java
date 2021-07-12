@@ -21,6 +21,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import main.model.services.DepartmentService;
+import main.model.services.SellerService;
 
 /**
  *
@@ -41,7 +42,14 @@ public class MainViewController implements Initializable {
     //Para os eventos heandler
     @FXML
     public void onMenuItemSellerAction() {
-        System.out.println("Seller");
+         loadView("/main/gui/DepartamentList.fxml", (DepartamentListController controller) -> {
+            controller.setDepartamentService(new DepartmentService());
+            controller.updateTableView();
+        });
+       // loadView("/main/gui/SellerList.fxml", (SellerListController controller) -> {
+       //     controller.setSellerService(new SellerService());
+       //     controller.updateTableView();
+       // });
     }
 
     @FXML
