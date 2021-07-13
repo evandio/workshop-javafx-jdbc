@@ -6,8 +6,11 @@
 package main.controller;
 
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -16,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import main.db.DbException;
@@ -33,43 +37,53 @@ import main.model.exception.ValidationException;
  * @author evand
  */
 public class SellerFormController implements Initializable {
-    
+
     private Seller entity;
     private SellerService service;
     private List<DataChangeListener> dataChangeListener = new ArrayList<>();
-    
+
     @FXML
     private TextField txtId;
-    
+
     @FXML
     private TextField txtName;
-    
+
     @FXML
     private TextField txtEmail;
-    
+
     @FXML
-    private TextField txtBirthDate;
-    
+    private DatePicker dpBirthDate;
+
     @FXML
     private TextField txtBaseSalary;
-    
+
     @FXML
     private Label labelErroName;
+
+    @FXML
+    private Label labelErroEmail;
+
+    @FXML
+    private Label labelErroBirthDate;
+
+    @FXML
+    private Label labelErroBaseSalary;
+
     @FXML
     private Button btSave;
-    
+
     private Button btCancel;
-    
+
     public void onBtSaveAction(ActionEvent event) {
-        
+
         if (entity == null) {
             throw new DbException("Entity was null!");
         }
-        
+
         if (service == null) {
             throw new DbException("Service was null");
         }
-        
+
         try {
             entity = getFormData();
             service.saveOrUpdatet(entity);
@@ -81,19 +95,19 @@ public class SellerFormController implements Initializable {
             Alerts.showAlert("Error saving object", null, e.getMessage(), Alert.AlertType.ERROR);
         }
     }
-    
+
     public void onBtCancelAction(ActionEvent event) {
         Utils.currentStage(event).close();
     }
-    
+
     public void setSeller(Seller entity) {
         this.entity = entity;
     }
-    
+
     public void setSellerService(SellerService service) {
         this.service = service;
     }
-    
+
     public void subscribeDataChangeListener(DataChangeListener listener) {
         dataChangeListener.add(listener);
     }
@@ -105,14 +119,16 @@ public class SellerFormController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         initializeNodes();
     }
-    
+
     private void initializeNodes() {
         Constraints.setTextFieldDouble(txtId);
         Constraints.setTextFieldMaxLenght(txtName, 40);
-        //Constraints.setTextFieldMaxLenght(txtEmail, 80);
-        //Constraints.setTextField(txtEmail, 80);
+        Constraints.setTextFieldDouble(txtBaseSalary);
+        Constraints.setTextFieldMaxLenght(txtEmail, 80);
+        Utils.formatDatePicker(dpBirthDate, "dd/MM/yyyy");
+
     }
-    
+
     public void updateFormData() {
         if (entity == null) {
             throw new IllegalStateException("Entity was null");
@@ -120,33 +136,40 @@ public class SellerFormController implements Initializable {
         //txtId.setText(String.valueOf(entity.getId()));
         txtId.setText(String.valueOf(entity.getId()).toString());
         txtName.setText(entity.getName());
+        txtEmail.setText(entity.getEmail());
+        Locale.setDefault(Locale.US);
+        txtBaseSalary.setText(String.format("%.2f", entity.getBaseSalary()));
+        if (entity.getBirthDate() != null) {
+            dpBirthDate.setValue(LocalDateTime.ofInstant(entity.getBirthDate().toInstant(), ZoneId.systemDefault()).toLocalDate());
+        }
+
     }
-    
+
     private Seller getFormData() {
         Seller obj = new Seller();
-        
+
         ValidationException exception = new ValidationException("Validation error!");
-        
+
         obj.setId(Utils.tryParseToInt(txtId.getText()));
-        
+
         if (txtName.getText() == null || txtName.getText().equals("")) {
             exception.addErros("name", "Field can't be empty!");
         }
         obj.setName(txtName.getText());
-        
+
         if (exception.getErros().size() > 0) {
             throw exception;
         }
-        
+
         return obj;
     }
-    
+
     private void notifyDataChangeListeners() {
         for (DataChangeListener listener : dataChangeListener) {
             listener.onDataChanged();
         }
     }
-    
+
     private void setErrorMensages(Map<String, String> erros) {
         Set<String> fields = erros.keySet();
         if (fields.contains("name")) {

@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import main.db.DB;
-import main.model.dao.DaoFactory;
 import main.model.dao.SellerDao;
 import main.model.entities.Department;
 import main.model.entities.Seller;
@@ -132,7 +131,7 @@ public class SellerDaoJDBC implements SellerDao {
         obj.setId(rs.getInt("id"));
         obj.setName(rs.getString("name"));
         obj.setEmail(rs.getString("email"));
-        obj.setBirthDate(rs.getDate("birthdate"));
+        obj.setBirthDate(new java.util.Date(rs.getTimestamp("birthdate").getTime()));
         obj.setBaseSalary(rs.getDouble("basesalary"));
         obj.setDepartment(dep);
 
@@ -180,5 +179,5 @@ public class SellerDaoJDBC implements SellerDao {
             DB.closeResultSet(rs);
         }
     }
-    
+
 }
