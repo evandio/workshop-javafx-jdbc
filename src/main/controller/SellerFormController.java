@@ -22,8 +22,8 @@ import main.db.DbException;
 import main.gui.util.Alerts;
 import main.gui.util.Constraints;
 import main.gui.util.Utils;
-import main.model.entities.Department;
-import main.model.services.DepartmentService;
+import main.model.entities.Seller;
+import main.model.services.SellerService;
 import main.gui.listener.DataChangeListener;
 import main.model.exception.ValidationException;
 
@@ -32,10 +32,10 @@ import main.model.exception.ValidationException;
  *
  * @author evand
  */
-public class DeparttmentFormController implements Initializable {
+public class SellerFormController implements Initializable {
     
-    private Department entity;
-    private DepartmentService service;
+    private Seller entity;
+    private SellerService service;
     private List<DataChangeListener> dataChangeListener = new ArrayList<>();
     
     @FXML
@@ -43,6 +43,15 @@ public class DeparttmentFormController implements Initializable {
     
     @FXML
     private TextField txtName;
+    
+    @FXML
+    private TextField txtEmail;
+    
+    @FXML
+    private TextField txtBirthDate;
+    
+    @FXML
+    private TextField txtBaseSalary;
     
     @FXML
     private Label labelErroName;
@@ -77,11 +86,11 @@ public class DeparttmentFormController implements Initializable {
         Utils.currentStage(event).close();
     }
     
-    public void setDepartment(Department entity) {
+    public void setSeller(Seller entity) {
         this.entity = entity;
     }
     
-    public void setDepartmentService(DepartmentService service) {
+    public void setSellerService(SellerService service) {
         this.service = service;
     }
     
@@ -100,6 +109,8 @@ public class DeparttmentFormController implements Initializable {
     private void initializeNodes() {
         Constraints.setTextFieldDouble(txtId);
         Constraints.setTextFieldMaxLenght(txtName, 40);
+        //Constraints.setTextFieldMaxLenght(txtEmail, 80);
+        //Constraints.setTextField(txtEmail, 80);
     }
     
     public void updateFormData() {
@@ -111,8 +122,8 @@ public class DeparttmentFormController implements Initializable {
         txtName.setText(entity.getName());
     }
     
-    private Department getFormData() {
-        Department obj = new Department();
+    private Seller getFormData() {
+        Seller obj = new Seller();
         
         ValidationException exception = new ValidationException("Validation error!");
         

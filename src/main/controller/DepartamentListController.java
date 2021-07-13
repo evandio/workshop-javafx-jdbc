@@ -29,7 +29,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import main.db.DB;
 import main.gui.listener.DataChangeListener;
 import main.gui.util.Alerts;
 import main.gui.util.Utils;
@@ -71,7 +70,7 @@ public class DepartamentListController implements Initializable, DataChangeListe
 
         Stage parentStage = Utils.currentStage(event);
         Department obj = new Department();
-        createDialogForm(obj, "/main/gui/DeparttmentForm.fxml", parentStage);
+        createDialogForm(obj, "/main/gui/DepartmentForm.fxml", parentStage);
     }
 
     /**
@@ -117,7 +116,7 @@ public class DepartamentListController implements Initializable, DataChangeListe
             FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
             Pane pane = loader.load();
 
-            DeparttmentFormController controller = loader.getController();
+            DepartmentFormController controller = loader.getController();
             controller.setDepartment(obj);
             controller.setDepartmentService(new DepartmentService());
             controller.subscribeDataChangeListener(this);

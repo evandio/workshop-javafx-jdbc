@@ -5,9 +5,10 @@
  */
 package main.controller;
 
-
+import java.io.IOException;
 import main.Main;
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -16,7 +17,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -24,6 +27,8 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import main.gui.listener.DataChangeListener;
 import main.gui.util.Alerts;
@@ -51,6 +56,15 @@ public class SellerListController implements Initializable, DataChangeListener {
     private TableColumn<Seller, String> tableColumnName;
 
     @FXML
+    private TableColumn<Seller, String> tableColumnEmail;
+
+    @FXML
+    private TableColumn<Seller, Date> tableColumnBirthDate;
+
+    @FXML
+    private TableColumn<Seller, Double> tableColumnBaseSalary;
+
+    @FXML
     TableColumn<Seller, Seller> tableColumnEDIT;
 
     @FXML
@@ -66,7 +80,7 @@ public class SellerListController implements Initializable, DataChangeListener {
 
         Stage parentStage = Utils.currentStage(event);
         Seller obj = new Seller();
-        createDialogForm(obj, "/main/gui/DeparttmentForm.fxml", parentStage);
+        createDialogForm(obj, "/main/gui/SellerForm.fxml", parentStage);
     }
 
     /**
@@ -79,6 +93,13 @@ public class SellerListController implements Initializable, DataChangeListener {
     public void initializeNodes() {
         tableColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
         tableColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        tableColumnEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+
+        tableColumnBirthDate.setCellValueFactory(new PropertyValueFactory<>("birthDate"));
+        Utils.formatTableColumnDate(tableColumnBirthDate, "dd/MM/yyyy");
+
+        tableColumnBaseSalary.setCellValueFactory(new PropertyValueFactory<>("baseSalary"));
+        Utils.formatTableColumnDouble(tableColumnBaseSalary, 2);
 
         Stage stage = (Stage) Main.getMainScene().getWindow();
         tableViewDepartament.prefHeightProperty().bind(stage.heightProperty());
@@ -108,12 +129,12 @@ public class SellerListController implements Initializable, DataChangeListener {
     }
 
     private void createDialogForm(Seller obj, String absoluteName, Stage parentStage) {
-        /**
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
             Pane pane = loader.load();
 
-            DeparttmentFormController controller = loader.getController();
+            SellerFormController controller = loader.getController();
             controller.setSeller(obj);
             controller.setSellerService(new SellerService());
             controller.subscribeDataChangeListener(this);
@@ -129,7 +150,8 @@ public class SellerListController implements Initializable, DataChangeListener {
 
         } catch (IOException e) {
             Alerts.showAlert("IO Exceptio", "Errlo loading view", e.getMessage(), Alert.AlertType.ERROR);
-        }*/
+        }
+
     }
 
     private void initEditButtons() {
@@ -147,7 +169,7 @@ public class SellerListController implements Initializable, DataChangeListener {
 
                 setGraphic(button);
                 button.setOnAction(
-                        event -> createDialogForm(obj, "/main/gui/DeparttmentForm.fxml", Utils.currentStage(event))
+                        event -> createDialogForm(obj, "/main/gui/SellerForm.fxml", Utils.currentStage(event))
                 );
             }
         });
