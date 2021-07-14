@@ -35,6 +35,7 @@ import main.gui.util.Alerts;
 import main.gui.util.Utils;
 import main.model.dao.imp.DbIntegrityException;
 import main.model.entities.Seller;
+import main.model.services.DepartmentService;
 import main.model.services.SellerService;
 
 /**
@@ -136,7 +137,8 @@ public class SellerListController implements Initializable, DataChangeListener {
 
             SellerFormController controller = loader.getController();
             controller.setSeller(obj);
-            controller.setSellerService(new SellerService());
+            controller.setServices(new SellerService(), new DepartmentService());
+            controller.loadAssociatedObjects();
             controller.subscribeDataChangeListener(this);
             controller.updateFormData();
 
@@ -149,6 +151,7 @@ public class SellerListController implements Initializable, DataChangeListener {
             dialogStage.showAndWait();
 
         } catch (IOException e) {
+            e.printStackTrace();
             Alerts.showAlert("IO Exceptio", "Errlo loading view", e.getMessage(), Alert.AlertType.ERROR);
         }
 

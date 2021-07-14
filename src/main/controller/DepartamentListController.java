@@ -131,6 +131,7 @@ public class DepartamentListController implements Initializable, DataChangeListe
             dialogStage.showAndWait();
 
         } catch (IOException e) {
+            e.printStackTrace();
             Alerts.showAlert("IO Exceptio", "Errlo loading view", e.getMessage(), Alert.AlertType.ERROR);
         }
     }
